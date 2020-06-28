@@ -36,6 +36,15 @@
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>webpack build</id>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>--config webpack.common.js</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
