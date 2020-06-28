@@ -12,6 +12,24 @@
 
     <build>
         <plugins>
+            <!-- for skipping generation of empty jar of frontend module -->
+            <!-- see: https://stackoverflow.com/questions/2188746/what-is-the-best-way-to-avoid-maven-jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <skipIfEmpty>true</skipIfEmpty>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <!-- node, npm, and frontend bundle -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -34,6 +52,15 @@
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>webpack build</id>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>--config webpack.common.js</arguments>
                         </configuration>
                     </execution>
                 </executions>

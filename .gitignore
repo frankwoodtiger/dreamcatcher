@@ -31,3 +31,5 @@ build/
 .vscode/
 
 frontend/node/
+frontend/node_modules/
+backend/src/main/resources/static/js/

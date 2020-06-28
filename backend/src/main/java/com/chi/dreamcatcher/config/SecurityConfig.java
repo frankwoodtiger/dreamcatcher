@@ -11,7 +11,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/**").permitAll()
             // Need to permit this to skip basic authentication. Then, the redirect from / to /api can be handled
             // by the custom WebConfig class
-            .antMatchers("/").permitAll();
+            .antMatchers("/").permitAll()
+            .antMatchers("/js/**").permitAll();
         // calling super as we still want the default auto configuration for basic authentication of management console
         // like H2-console and actuator endpoints.
         super.configure(http);
