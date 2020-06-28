@@ -1,0 +1,14 @@
+// The advantage of using eslintrc file is that you can check against this file using eslint command like:
+//    running lint separately on terminal - ./node_modules/eslint/bin/eslint.js src/js/index.js
+// but you cannot do that with configuration inside webpack config file
+
+{
+  "parser": "babel-eslint", // lint source code that is valid Babel interpreted JavaScript
+  "extends": ["eslint:recommended"], // see https://eslint.org/docs/rules/
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "no-unused-vars": 1 // 0: off, 1: warn, 2: err
+  }
+}
