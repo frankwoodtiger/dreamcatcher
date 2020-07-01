@@ -32,6 +32,16 @@ module.exports = {
                 loader: 'eslint-loader'
                 // other configuration is defined in .eslintrc.json
             },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: [
+                    // add style tag to page when there is import statement
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader'
+                ],
+            }
         ]
     }
 };
