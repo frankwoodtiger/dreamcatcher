@@ -8,7 +8,15 @@
   "env": {
     "browser": true
   },
+  "plugins": ["react"],
   "rules": {
-    "no-unused-vars": 1 // 0: off, 1: warn, 2: err
+    /*
+    'extends': ['plugin:react/recommended'] might add a lot of unwanted rules, to
+    target specific rules in the plugin, uses below rules:
+    see: https://stackoverflow.com/questions/42541559/eslint-with-react-gives-no-unused-vars-errors
+    */
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "no-unused-vars": 1 // 0: off, 1: warn, 2: err,
   }
 }
