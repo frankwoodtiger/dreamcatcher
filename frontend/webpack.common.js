@@ -3,6 +3,7 @@ const resourcePath = path.resolve(__dirname, '../backend/src/main/resources/stat
 
 module.exports = {
     mode: 'none',
+    devtool: 'inline-source-map',
     entry: './src/js/index.js',
     output: {
         filename: 'app.js',
