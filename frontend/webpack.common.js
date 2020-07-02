@@ -3,6 +3,7 @@ const resourcePath = path.resolve(__dirname, '../backend/src/main/resources/stat
 
 module.exports = {
     mode: 'none',
+    devtool: 'inline-source-map',
     entry: './src/js/index.js',
     output: {
         filename: 'app.js',
@@ -31,6 +32,16 @@ module.exports = {
                 loader: 'eslint-loader'
                 // other configuration is defined in .eslintrc.json
             },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: [
+                    // add style tag to page when there is import statement
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader'
+                ],
+            }
         ]
     }
 };
