@@ -7,11 +7,14 @@ class Question extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            originalQuestionPool: [],
+            questionPool: [],
             question: {},
             chosenIndex: -1,
-            questionCount: 1,
-            totalQuestionCount: 3, // dummy, need api call to fetch this info
+            questionCount: 0,
+            totalQuestionCount: 0,
             correctAnswerCount: 0,
+            finished: false
         }
         this.handleChoiceClick = this.handleChoiceClick.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
@@ -19,11 +22,23 @@ class Question extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/questions/1')
+        axios.get('/api/questions')
             .then(response => {
                 console.log(response.data);
-                this.setState({question: response.data});
+                this.initializeState(response.data._embedded.questions)
             });
+    }
+
+    getRandomQuestion(questions) {
+        let randomIndex = Math.floor(Math.random() * questions.length);
+        return questions[randomIndex];
+    }
+
+    removeQuestionFromPool(question) {
+        this.setState({
+            questionPool: this.state.questionPool
+                .filter(q => q._links.question.href !== question._links.question.href)
+        });
     }
 
     render() {
@@ -43,8 +58,9 @@ class Question extends React.Component {
                                        index={index}/>
                     })}
                 </div>
-                {this.hasAnswered() ? <button onClick={this.handleNextClick}>Next</button> : null}
-                <button onClick={this.handleResetClick}>Reset</button>
+                {!this.state.finished && this.hasAnswered() ? <button className="btn" onClick={this.handleNextClick}>Next</button> : null}
+                <button className="btn right" onClick={this.handleResetClick}>Reset</button>
+                {this.state.finished ? <div>You have finished all the questions! Good luck!</div> : null}
             </div>
         );
     }
@@ -60,7 +76,8 @@ class Question extends React.Component {
         this.setState({
             chosenIndex: chosenIndex,
             questionCount: this.state.questionCount + 1,
-            correctAnswerCount: correctAnswerCount
+            correctAnswerCount: correctAnswerCount,
+            finished: (this.state.questionCount + 1) === this.state.totalQuestionCount
         });
     }
 
@@ -69,11 +86,36 @@ class Question extends React.Component {
     }
 
     handleNextClick() {
-        // should fire API call to get next question
+        let randomQuestion = this.getRandomQuestion(this.state.questionPool);
+        this.setState({
+            chosenIndex: -1,
+            question: randomQuestion
+        })
+        this.removeQuestionFromPool(randomQuestion);
+    }
+
+    initializeState(questions) {
+        const randomQuestion = this.getRandomQuestion(questions);
+        const _originalQuestionPool = [...questions];
+        const _questionPool = [...questions];
+        this.setState({
+            originalQuestionPool: _originalQuestionPool,
+            questionPool: _questionPool,
+            question: randomQuestion,
+            chosenIndex: -1,
+            questionCount: 0,
+            totalQuestionCount: questions.length,
+            correctAnswerCount: 0,
+            finished: false
+        }, () => { this.removeQuestionFromPool(randomQuestion); });
+        // Note that we need to use call back instead just a statement after setState because we want to make sure
+        // the questionPool of the state is set before we remove which is not guaranteed due to the async nature of JS.
+        // In JS world, we can use callback to make sure the value being set before we removed. There might be other
+        // ways like leveraging Promise but can be done later.
     }
 
     handleResetClick() {
-        // should fire API call to reset counter
+        this.initializeState(this.state.originalQuestionPool);
     }
 
     determineChoiceBgColorClassName(choice, index) {
