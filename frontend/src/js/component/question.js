@@ -1,5 +1,6 @@
 import React from "react";
 import Choice from "./choice";
+import Counter from "./counter";
 import axios from "axios";
 
 class Question extends React.Component {
@@ -7,7 +8,10 @@ class Question extends React.Component {
         super(props);
         this.state = {
             question: {},
-            chosenIndex: -1
+            chosenIndex: -1,
+            questionCount: 1,
+            totalQuestionCount: 3, // dummy, need api call to fetch this info
+            correctAnswerCount: 0,
         }
         this.handleChoiceClick = this.handleChoiceClick.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
@@ -25,6 +29,9 @@ class Question extends React.Component {
     render() {
         return (
             <div className="question">
+                <Counter questionCount={this.state.questionCount}
+                         totalQuestionCount={this.state.totalQuestionCount}
+                         correctAnswerCount={this.state.correctAnswerCount}/>
                 <div>{this.state.question.text}</div>
                 <div>
                     {this.state.question.choices && this.state.question.choices.map((choice, index) => {
@@ -43,10 +50,17 @@ class Question extends React.Component {
     }
 
     handleChoiceClick(e) {
+        let chosenIndex = parseInt(e.target.getAttribute('data-index'));
+        let correctAnswerCount = this.state.correctAnswerCount;
+        if (this.state.question.choices[chosenIndex].answer) {
+            correctAnswerCount++;
+        }
         // Using shallow merge technique. For nested obj, we can use spread operator to deep merge.
         // Good article on this topic: https://medium.com/@imrobinkim/how-state-updates-are-merged-in-react-e07fc669fec2
         this.setState({
-            chosenIndex: parseInt(e.target.getAttribute('data-index'))
+            chosenIndex: chosenIndex,
+            questionCount: this.state.questionCount + 1,
+            correctAnswerCount: correctAnswerCount
         });
     }
 
