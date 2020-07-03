@@ -82,8 +82,6 @@ class Question extends React.Component {
         });
     }
 
-
-
     hasAnswered() {
         return this.state.chosenId > -1;
     }
@@ -97,13 +95,28 @@ class Question extends React.Component {
         this.removeQuestionFromPool(randomQuestion);
     }
 
+    getQuestionsWithShuffledChoices(questions) {
+        let _questions = [...questions];
+        _questions.forEach(question => {
+            let choices = question.choices;
+            // Use modern version of Fisher–Yates shuffle
+            // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+            for (let i = choices.length - 1; i >= 0; i--) {
+                let randomIndex = Math.floor(Math.random() * i);
+                let temp = choices[randomIndex]
+                choices[randomIndex] = choices[i];
+                choices[i] = temp;
+            }
+        })
+        return _questions
+    }
+
     initializeState(questions) {
-        const randomQuestion = this.getRandomQuestion(questions);
-        const _originalQuestionPool = [...questions];
-        const _questionPool = [...questions];
+        let _questions = this.getQuestionsWithShuffledChoices(questions);
+        const randomQuestion = this.getRandomQuestion(_questions);
         this.setState({
-            originalQuestionPool: _originalQuestionPool,
-            questionPool: _questionPool,
+            originalQuestionPool: _questions,
+            questionPool: _questions,
             question: randomQuestion,
             chosenId: -1,
             questionCount: 0,
