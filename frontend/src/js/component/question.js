@@ -10,7 +10,7 @@ class Question extends React.Component {
             originalQuestionPool: [],
             questionPool: [],
             question: {},
-            chosenIndex: -1,
+            chosenId: -1,
             questionCount: 0,
             totalQuestionCount: 0,
             correctAnswerCount: 0,
@@ -49,13 +49,13 @@ class Question extends React.Component {
                          correctAnswerCount={this.state.correctAnswerCount}/>
                 <div className="row pb-3 mt-5">{this.state.question.text}</div>
                 <div>
-                    {this.state.question.choices && this.state.question.choices.map((choice, index) => {
+                    {this.state.question.choices && this.state.question.choices.map((choice) => {
                         return <Choice key={choice.id}
+                                       id={choice.id}
                                        text={choice.text}
-                                       bgColorClassName={this.determineChoiceBgColorClassName(choice, index)}
+                                       bgColorClassName={this.determineChoiceBgColorClassName(choice)}
                                        clickable={!this.hasAnswered()}
-                                       onClick={this.hasAnswered() ? (false || null) : this.handleChoiceClick}
-                                       index={index}/>
+                                       onClick={this.hasAnswered() ? (false || null) : this.handleChoiceClick}/>
                     })}
                 </div>
                 {!this.state.finished && this.hasAnswered() ?
@@ -67,29 +67,31 @@ class Question extends React.Component {
     }
 
     handleChoiceClick(e) {
-        let chosenIndex = parseInt(e.target.getAttribute('data-index'));
+        let chosenId = parseInt(e.target.getAttribute('data-id'));
         let correctAnswerCount = this.state.correctAnswerCount;
-        if (this.state.question.choices[chosenIndex].answer) {
+        if (this.state.question.choices.filter(choice => choice.id === chosenId)[0].answer) {
             correctAnswerCount++;
         }
         // Using shallow merge technique. For nested obj, we can use spread operator to deep merge.
         // Good article on this topic: https://medium.com/@imrobinkim/how-state-updates-are-merged-in-react-e07fc669fec2
         this.setState({
-            chosenIndex: chosenIndex,
+            chosenId: chosenId,
             questionCount: this.state.questionCount + 1,
             correctAnswerCount: correctAnswerCount,
             finished: (this.state.questionCount + 1) === this.state.totalQuestionCount
         });
     }
 
+
+
     hasAnswered() {
-        return this.state.chosenIndex > -1;
+        return this.state.chosenId > -1;
     }
 
     handleNextClick() {
         let randomQuestion = this.getRandomQuestion(this.state.questionPool);
         this.setState({
-            chosenIndex: -1,
+            chosenId: -1,
             question: randomQuestion
         })
         this.removeQuestionFromPool(randomQuestion);
@@ -103,7 +105,7 @@ class Question extends React.Component {
             originalQuestionPool: _originalQuestionPool,
             questionPool: _questionPool,
             question: randomQuestion,
-            chosenIndex: -1,
+            chosenId: -1,
             questionCount: 0,
             totalQuestionCount: questions.length,
             correctAnswerCount: 0,
@@ -119,12 +121,12 @@ class Question extends React.Component {
         this.initializeState(this.state.originalQuestionPool);
     }
 
-    determineChoiceBgColorClassName(choice, index) {
+    determineChoiceBgColorClassName(choice) {
         if (this.hasAnswered()) {
             if (choice.answer) {
                 return " bg-color-aliceblue";
             }
-            if (this.state.chosenIndex === index && !choice.answer) {
+            if (this.state.chosenId === choice.id && !choice.answer) {
                 return " bg-color-antiquewhite";
             }
         }
