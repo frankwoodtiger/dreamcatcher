@@ -169,9 +169,8 @@ public class DatabaseLoader implements CommandLineRunner {
                     "Separation of powers",
                     "Checks and orders",
                     "Orders and balances",
-                    "Checks and balances",
                     "Checks and powers",
-                    "Powers and balanceS",
+                    "Powers and balances",
                     "Separation of orders",
                     "Separation of balances"
                 },
