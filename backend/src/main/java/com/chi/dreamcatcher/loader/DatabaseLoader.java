@@ -24,20 +24,20 @@ public class DatabaseLoader implements CommandLineRunner {
         questionRepository.save(createQuestion(
                 "What is the supreme law of the land?",
                 new String[] {
-                    "the Constitution",
-                    "the Independence",
-                    "the Legislation"
+                    "The Constitution",
+                    "The Independence",
+                    "The Legislation"
                 },
                 Set.of(0)));
         questionRepository.save(createQuestion(
                 "What does the Constitution do?",
                 new String[] {
-                    "sets up the government",
-                    "sets up the military",
-                    "defines the government",
-                    "defines the legislation",
-                    "protects basic rights of Americans",
-                    "protects the law of Americans"
+                    "Sets up the government",
+                    "Sets up the military",
+                    "Defines the government",
+                    "Defines the legislation",
+                    "Protects basic rights of Americans",
+                    "Protects the law of Americans"
                 },
                 Set.of(0, 2, 4)));
         questionRepository.save(createQuestion(

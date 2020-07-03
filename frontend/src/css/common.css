@@ -1,5 +1,6 @@
 .btn {
     display: inline-block;
+    width: 120px;
 }
 
 .clickable {

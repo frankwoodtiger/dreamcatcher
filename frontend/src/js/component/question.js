@@ -47,19 +47,20 @@ class Question extends React.Component {
                 <Counter questionCount={this.state.questionCount}
                          totalQuestionCount={this.state.totalQuestionCount}
                          correctAnswerCount={this.state.correctAnswerCount}/>
-                <div>{this.state.question.text}</div>
+                <div className="row pb-3 mt-5">{this.state.question.text}</div>
                 <div>
                     {this.state.question.choices && this.state.question.choices.map((choice, index) => {
                         return <Choice key={choice.id}
                                        text={choice.text}
                                        bgColorClassName={this.determineChoiceBgColorClassName(choice, index)}
                                        clickable={!this.hasAnswered()}
-                                       onClick={this.hasAnswered() ? ( false || null ): this.handleChoiceClick}
+                                       onClick={this.hasAnswered() ? (false || null) : this.handleChoiceClick}
                                        index={index}/>
                     })}
                 </div>
-                {!this.state.finished && this.hasAnswered() ? <button className="btn" onClick={this.handleNextClick}>Next</button> : null}
-                <button className="btn right" onClick={this.handleResetClick}>Reset</button>
+                {!this.state.finished && this.hasAnswered() ?
+                    <button className="row btn p-3 border border-dark" onClick={this.handleNextClick}>Next</button> : null}
+                <button className="row btn p-3 border border-dark right" onClick={this.handleResetClick}>Reset</button>
                 {this.state.finished ? <div>You have finished all the questions! Good luck!</div> : null}
             </div>
         );
